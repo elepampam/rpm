@@ -1,0 +1,47 @@
+body{
+	background: rgba(19, 35, 47, 0.9);
+}
+.form{
+	padding: 10px;
+	max-width: 500px;
+	margin:50px auto;
+	color: white;
+}
+.custom-text-form{
+	background-color: transparent;
+	border-radius: 0;
+	color: white;
+}
+.custom-text-form:focus{
+	border-color: #1ab188;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #1ab188;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #1ab188;
+}
+
+.btn-login{
+	border-radius: 0;
+	background: #1ab188;
+}
+.logo{
+	max-width: 200px;
+	margin: 0 auto;
+	display: block;
+}
+
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+  	.custom-form{
+		margin-top: 0px;
+	}
+}
+
+#particle-js{
+	position: absolute;
+    z-index: -1;
+    top: 0;
+    width: 100%;
+    height: 99%;
+}
