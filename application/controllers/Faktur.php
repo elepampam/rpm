@@ -13,12 +13,12 @@ class Faktur extends CI_Controller {
 			$data['user'] = $this->session->userdata('user_masuk');
 			$data['posisi'] = 'Debit Pajak Masukkan';
 			$data['action'] = 'debit';
-			if ($this->session->flashdata('gagalDebit')) {
-				$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
-			}
-			if ($this->session->flashdata('sukses')) {
-				$data['sukses'] = $this->session->flashdata('sukses');
-			}
+			// if ($this->session->flashdata('gagalDebit')) {
+			// 	$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
+			// }
+			// if ($this->session->flashdata('sukses')) {
+			// 	$data['sukses'] = $this->session->flashdata('sukses');
+			// }
 
 			$this->load->view('user-input',$data);			
 		}
@@ -31,12 +31,12 @@ class Faktur extends CI_Controller {
 			$data['user'] = $this->session->userdata('user_masuk');
 			$data['posisi'] = 'Kredit Pajak Masukkan';
 			$data['action'] = 'kredit';
-			if ($this->session->flashdata('gagalDebit')) {
-				$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
-			}
-			if ($this->session->flashdata('sukses')) {
-				$data['sukses'] = $this->session->flashdata('sukses');
-			}
+			// if ($this->session->flashdata('gagalDebit')) {
+			// 	$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
+			// }
+			// if ($this->session->flashdata('sukses')) {
+			// 	$data['sukses'] = $this->session->flashdata('sukses');
+			// }
 
 			$this->load->view('user-input',$data);			
 		}

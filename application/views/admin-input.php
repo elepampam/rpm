@@ -5,12 +5,16 @@
             <img src="<?php echo base_url(); ?>/assets/images/logo-itdc.png" class="logo-itdc">
         </a>
         <!-- call the debit/kredit view here -->
+        <ul class="nav nav-tabs">
+            <li <?php if(isset($action) && $action == 'debit') echo 'class="active"'; ?>><a href="http://localhost/banditrpm/index.php/admin/debit">DEBIT</a></li>
+            <li <?php if(isset($action) && $action == 'kredit') echo 'class="active"'; ?>><a href="http://localhost/banditrpm/index.php/admin/kredit">KREDIT</a></li>
+        </ul>
         <?php 
         if (isset($action) && $action == 'debit') {
-            require('action-debit.php');
+            require('admin-input-debit.php');
         }
         elseif(isset($action) && $action == 'kredit'){
-            require('action-kredit.php');
+            require('admin-input-kredit.php');
         }        
       
         ?>

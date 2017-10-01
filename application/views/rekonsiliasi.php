@@ -235,10 +235,11 @@
                 ContentType: 'application/json',
                 dataType: 'json',                     
                 success: function(result, status){
+                    console.log(result)
                     $('#ppnDebit').html(result.ppnDebit);
                     $('#ppnKredit').html(result.ppnKredit);
-                    $('#bebanDebit').html(result.bebanDebit);
-                    $('#bebanKredit').html(result.bebanKredit);
+                    $('#bebanDebit').html(result.sumBebanDebit);
+                    $('#bebanKredit').html(result.sumBebanKredit);
                     $('#totalBebanKredit').html(result.totalBebanKredit);
                     $('#totalBebanDebit').html(result.totalBebanDebit);
                     $('#selisihPpn').html(result.selisihPpn);

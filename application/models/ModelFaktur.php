@@ -24,9 +24,6 @@ class ModelFaktur extends CI_Model{
 		$this->db->where('faktur_kredit.IS_MATCHED',0);
 		$this->db->limit(1);
 		$result = $this->db->get();
-
-		// return $result;
-
 		if ($result->num_rows() > 0) {
 			return true;
 		}
@@ -303,13 +300,43 @@ class ModelFaktur extends CI_Model{
 
 	public function deleteFaktur($input){
 		if (isset($input['NO_FAKTUR'])) {
+			// check if faktur already rekon or not
+			$checkIsRekon = $this->db->query("SELECT IS_MATCHED FROM ".$input['TABEL']." WHERE NO_FAKTUR = ".$input['NO_FAKTUR'])->result();		
+
+			if ($checkIsRekon[0]->IS_MATCHED == 1) {
+				if ($input['TABEL'] == 'faktur_debit') {
+					$oppositeTable = 'faktur_kredit';
+				}	
+				else
+					$oppositeTable = 'faktur_debit';
+
+				$this->db->where('NO_FAKTUR', $input['NO_FAKTUR']);
+				$resultOpposite = $this->db->delete($oppositeTable);
+			}
+
 			$this->db->where('NO_FAKTUR', $input['NO_FAKTUR']);
 			$result = $this->db->delete($input['TABEL']);		
+			return $result;
 		}
-		else
+		else{
+			if ($input['TABEL'] == 'faktur_debit') {
+				$oppositeTable = 'faktur_kredit';
+			}	
+			else
+				$oppositeTable = 'faktur_debit';
+
+			$allNoFaktur = $this->db->query("SELECT NO_FAKTUR FROM ".$input['TABEL']." WHERE IS_MATCHED = 1");
+			if ($allNoFaktur->num_rows() > 0) {
+				$tempFaktur = array();
+				foreach ($allNoFaktur->result() as $faktur) {
+					array_push($tempFaktur, $faktur->NO_FAKTUR);
+				}
+				$this->db->where_in('NO_FAKTUR',$tempFaktur);
+				$this->db->delete($oppositeTable);
+			}			
 			$result = $this->db->empty_table($input['TABEL']);
-		
-		return $result;
+			return $result;
+		}
 	}
 
 	public function allDatabaseCount($tabel){

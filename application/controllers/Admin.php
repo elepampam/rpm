@@ -11,14 +11,15 @@ class Admin extends CI_Controller {
 		if ($this->session->has_userdata('user_masuk')) {
 			$data['user'] = $this->session->userdata('user_masuk');
 			$data['posisi'] = 'Debit Pajak Masukkan';
-			if ($this->session->flashdata('gagalDebit')) {
-				$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
-			}
-			if ($this->session->flashdata('sukses')) {
-				$data['sukses'] = $this->session->flashdata('sukses');
-			}
+			$data['action'] = 'debit';
+			// if ($this->session->flashdata('gagalDebit')) {
+			// 	$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
+			// }
+			// if ($this->session->flashdata('sukses')) {
+			// 	$data['sukses'] = $this->session->flashdata('sukses');
+			// }
 
-			$this->load->view('admin-input-debit',$data);			
+			$this->load->view('admin-input',$data);			
 		}
 		else
 			redirect('home');
@@ -28,14 +29,15 @@ class Admin extends CI_Controller {
 		if ($this->session->has_userdata('user_masuk')) {
 			$data['user'] = $this->session->userdata('user_masuk');
 			$data['posisi'] = 'Kredit Pajak Masukkan';
-			if ($this->session->flashdata('gagalDebit')) {
-				$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
-			}
-			if ($this->session->flashdata('sukses')) {
-				$data['sukses'] = $this->session->flashdata('sukses');
-			}
+			$data['action'] = 'kredit';
+			// if ($this->session->flashdata('gagalDebit')) {
+			// 	$data['gagalDebit'] = $this->session->flashdata('gagalDebit');
+			// }
+			// if ($this->session->flashdata('sukses')) {
+			// 	$data['sukses'] = $this->session->flashdata('sukses');
+			// }
 
-			$this->load->view('admin-input-kredit',$data);			
+			$this->load->view('admin-input',$data);			
 		}
 		else
 			redirect('home');
@@ -296,12 +298,7 @@ class Admin extends CI_Controller {
 			$varKredit = $this->modelfaktur->informationDatabase('faktur_kredit');
 			$data['ppnKredit'] = $this->toRP($varKredit[0]['PPN']);
 			$data['totalKredit'] = $varKredit[0]['JUMLAH_FAKTUR'];
-			$this->load->view('admin-database',$data);
-			// if ($table == 'faktur_debit') {
-			// 	$this->load->view('admin-database-debit',$data);
-			// }
-			// else
-			// 	$this->load->view('admin-database-kredit',$data);
+			$this->load->view('admin-database',$data);			
 		}
 		else
 			redirect('home');
