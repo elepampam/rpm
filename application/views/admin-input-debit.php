@@ -1,7 +1,8 @@
-<div class="row" style="text-align:center">
-    <h3 style="margin-top:10px;">INPUT PAJAK MASUKKAN</h3>
+<div class="row" style="text-align:center;position: relative;">
+    <h3 style="margin-top:10px;">INPUT PAJAK MASUKAN</h3>
+    <a href="<?php echo site_url() ?>/admin/debitKhusus" class="btn btn-primary btn-pajak-khusus">Pajak Masukan Khusus</a>
     <div class="col-md-12 alert alert-info box-input">
-        <p>Masukkan <strong>file .csv</strong> dari pajak</p>                            
+        <p>Masukkan <strong>file .csv</strong> dari pajak</p>
             <div class="input-section">
                 <div class="form-control">
                     <input type="text" name="form-file-csv" class="" id="form-file-csv" readonly="true" placeholder="filename....">
@@ -12,7 +13,7 @@
                     </label>
                 </div>
             </div>
-        <input type="submit" class="btn btn-primary" value="posting" id="submit">                
+        <input type="submit" class="btn btn-primary" value="posting" id="submit">
     </div>
 </div>
 <div class="row faktur-information">
@@ -29,7 +30,7 @@
         <span class="gagal-faktur">&nbsp;&nbsp;&nbsp;</span>
         <small>Gagal Debit</small>
     </div>
-    
+
 </div>
 <div class="table-responsive">
     <table class="table table-bordered" id="tableFaktur" style="margin-bottom:0;">

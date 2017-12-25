@@ -19,7 +19,19 @@ class Admin extends CI_Controller {
 			// 	$data['sukses'] = $this->session->flashdata('sukses');
 			// }
 
-			$this->load->view('admin-input',$data);			
+			$this->load->view('admin-input',$data);
+		}
+		else
+			redirect('home');
+	}
+
+	public function debitKhusus(){
+		if ($this->session->has_userdata('user_masuk')) {
+			$data['user'] = $this->session->userdata('user_masuk');
+			$data['posisi'] = 'Debit Pajak Masukkan';
+			$data['action'] = 'debit-khusus';
+
+			$this->load->view('admin/admin-input-khusus',$data);
 		}
 		else
 			redirect('home');
@@ -37,20 +49,20 @@ class Admin extends CI_Controller {
 			// 	$data['sukses'] = $this->session->flashdata('sukses');
 			// }
 
-			$this->load->view('admin-input',$data);			
+			$this->load->view('admin-input',$data);
 		}
 		else
 			redirect('home');
-	}	
+	}
 
 	public function rekonsiliasi(){
 		if ($this->session->has_userdata('user_masuk')) {
 			$this->load->library('fakturs');
 			$data = $this->fakturs->rekon();
 			$data['user'] = $this->session->userdata('user_masuk');
-			$data['posisi'] = 'Rekonsiliasi';		
+			$data['posisi'] = 'Rekonsiliasi';
 
-			$this->load->view('rekonsiliasi',$data);		
+			$this->load->view('rekonsiliasi',$data);
 		}
 		else
 			redirect('home');
@@ -63,7 +75,7 @@ class Admin extends CI_Controller {
 			$this->load->model('user_model');
 			$data['users'] = $this->user_model->getalluser();
 			if (!empty($data['users'])) {
-				$data['users'] = $data['users']->result();								
+				$data['users'] = $data['users']->result();
 			}
 			else
 				$data['users'] = '';
@@ -78,8 +90,8 @@ class Admin extends CI_Controller {
 
 	public function edituser(){
 		if ($this->session->has_userdata('user_masuk')) {
-			// $this->load->view('kosongan',['error' => $this->session->flashdata('error')]);			
-			$data['posisi'] = 'Profile';	
+			// $this->load->view('kosongan',['error' => $this->session->flashdata('error')]);
+			$data['posisi'] = 'Profile';
 			$username = $this->input->get('username');
 			$this->load->model('user_model');
 			$data['userdata'] = $this->user_model->getUser($username);
@@ -112,11 +124,11 @@ class Admin extends CI_Controller {
 			$this->form_validation->set_rules('avatar','Profile Picture','required');
 
 			$oldUsername = $this->input->get('username');
-			if ($this->form_validation->run() == TRUE){				
+			if ($this->form_validation->run() == TRUE){
 				$name = $this->input->post('nama');
 				$username = $this->input->post('username');
-				$password = $this->input->post('password');	
-				$level = $this->input->post('level');	
+				$password = $this->input->post('password');
+				$level = $this->input->post('level');
 				$avatar = $this->input->post('avatar');
 
 				$this->load->model('user_model');
@@ -147,7 +159,7 @@ class Admin extends CI_Controller {
 	            	$error['value']['level'] = set_value('level');
 	            	$this->session->set_flashdata('error',$error);
 	            	redirect('admin/tambahuser');
-	            }		
+	            }
             }
             else{
             	$error['message']['username'] = form_error('username');
@@ -175,14 +187,14 @@ class Admin extends CI_Controller {
 			$response = array(
 				'code' => 204,
 				'message' => 'username available'
-			);			
+			);
 		}
 		else
 			$response = array(
 				'code' => 205,
 				'message' => 'username already exist'
 			);
-		
+
 		echo json_encode($response);
 	}
 
@@ -206,13 +218,13 @@ class Admin extends CI_Controller {
 			$this->form_validation->set_rules('nama','Name','required|max_length[350]|min_length[3]');
 			$this->form_validation->set_rules('password','Password','required|max_length[10]|min_length[5]');
 
-			if ($this->form_validation->run() == TRUE){				
+			if ($this->form_validation->run() == TRUE){
 				$name = $this->input->post('nama');
 				$username = $this->input->post('username');
-				$password = $this->input->post('password');				
+				$password = $this->input->post('password');
 				$level = $this->input->post('level');
 				$avatar = $this->input->post('avatar');
-						
+
 				$this->load->model('user_model');
 				$succes = $this->user_model->adduser(
 					[
@@ -230,8 +242,8 @@ class Admin extends CI_Controller {
 						]);
 					redirect('admin/user');
 				}
-				// $this->load->view('kosongan',['id' => $id]);				
-            }	
+				// $this->load->view('kosongan',['id' => $id]);
+            }
             else{
             	$error['message']['username'] = form_error('username');
             	$error['message']['password'] = form_error('password');
@@ -244,7 +256,7 @@ class Admin extends CI_Controller {
             	$error['value']['level'] = set_value('level');
             	$this->session->set_flashdata('error',$error);
             	redirect('admin/tambahuser');
-            }		
+            }
 		}
 		else
 			redirect('home');
@@ -273,10 +285,10 @@ class Admin extends CI_Controller {
 		if (is_null($angka)) {
 			return "Rp. 0,00";
 		}
-		$angka = str_split($angka);		
+		$angka = str_split($angka);
 		$fixedRp = ",00";
 		$index = 0;
-		for ($i=count($angka)-1; $i >= 0 ; $i--) { 
+		for ($i=count($angka)-1; $i >= 0 ; $i--) {
 			if ($index % 3 == 0 && $index != 0) {
 				$fixedRp = $angka[$i].".".$fixedRp;
 			}
@@ -290,7 +302,7 @@ class Admin extends CI_Controller {
 	public function database(){
 		if ($this->session->has_userdata('user_masuk')) {
 			$data['posisi'] = 'Manage Database';
-			$data['user'] = $this->session->userdata('user_masuk');			
+			$data['user'] = $this->session->userdata('user_masuk');
 			$this->load->model('ModelFaktur','modelfaktur');
 			$varDebit = $this->modelfaktur->informationDatabase('faktur_debit');
 			$data['ppnDebit'] = $this->toRP($varDebit[0]['PPN']);
@@ -298,11 +310,11 @@ class Admin extends CI_Controller {
 			$varKredit = $this->modelfaktur->informationDatabase('faktur_kredit');
 			$data['ppnKredit'] = $this->toRP($varKredit[0]['PPN']);
 			$data['totalKredit'] = $varKredit[0]['JUMLAH_FAKTUR'];
-			$this->load->view('admin-database',$data);			
+			$this->load->view('admin-database',$data);
 		}
 		else
 			redirect('home');
-	}	
+	}
 
 	public function informationDatabaseUpdate(){
 		$this->load->model('ModelFaktur','modelfaktur');
@@ -315,7 +327,7 @@ class Admin extends CI_Controller {
 
 		echo json_encode($data);
 	}
-	
+
 	public function tesform(){
 		$response = array(
 			'username' => $this->input->post('username'),

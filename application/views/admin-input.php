@@ -6,17 +6,17 @@
         </a>
         <!-- call the debit/kredit view here -->
         <ul class="nav nav-tabs">
-            <li <?php if(isset($action) && $action == 'debit') echo 'class="active"'; ?>><a href="http://localhost/banditrpm/index.php/admin/debit">DEBIT</a></li>
-            <li <?php if(isset($action) && $action == 'kredit') echo 'class="active"'; ?>><a href="http://localhost/banditrpm/index.php/admin/kredit">KREDIT</a></li>
+            <li <?php if(isset($action) && $action == 'debit') echo 'class="active"'; ?>><a href="<?php echo site_url()?>/admin/debit">DEBIT</a></li>
+            <li <?php if(isset($action) && $action == 'kredit') echo 'class="active"'; ?>><a href="<?php echo site_url()?>/admin/kredit">KREDIT</a></li>
         </ul>
-        <?php 
+        <?php
         if (isset($action) && $action == 'debit') {
             require('admin-input-debit.php');
         }
         elseif(isset($action) && $action == 'kredit'){
             require('admin-input-kredit.php');
         }        
-      
+
         ?>
     </div>
     <?php require('user-action.php') ?>
@@ -39,12 +39,12 @@
 <?php require('footer.php') ?>
 <script type="text/javascript">
 $(document).ready(function(){
-    var action = "<?php echo $action; ?>";    
+    var action = "<?php echo $action; ?>";
     var url = '';
     var ppnCount = 0;
     var ppnBmCount = 0;
     var arrayFaktur = [];
-    // var jumlahTerproses = 0; 
+    // var jumlahTerproses = 0;
     var jumlahGagal = 0;
     var jumlahSukses = 0;
     if (action == 'debit') {
@@ -52,7 +52,7 @@ $(document).ready(function(){
     }
     else{
         url = "<?php echo site_url(); ?>/faktur/kreditfaktur?token=";
-    }   
+    }
 
     function hitungPpn(nilaiPpn) {
         ppnCount += nilaiPpn;
@@ -85,7 +85,7 @@ $(document).ready(function(){
             }
         });
     });
-    
+
     $(document).on('click','#uncheckall',function(event){
         event.preventDefault();
         arrayFaktur.map(function(faktur, index){
@@ -99,11 +99,11 @@ $(document).ready(function(){
     $(document).on('change','.checkbox',function(e){
         var index = $(this).data('index');
         if ($(this).is(':checked')) {
-            arrayFaktur[index].isChecked = true;            
+            arrayFaktur[index].isChecked = true;
         }
         else{
             arrayFaktur[index].isChecked = false;
-        }        
+        }
     })
 
     $('#input-csv').change(function(e) {
@@ -119,16 +119,16 @@ $(document).ready(function(){
             var reader = new FileReader();
             reader.onload = function(e) {
                 var table = "<thead><tr><th><div class='dropdown'><button class='btn btn-primary dropdown-toggle' type='button' data-toggle='dropdown'>Check<span class='caret'></span></button><ul class='dropdown-menu'><li><a href='#' id='checkall'>Check all</a></li><li><a href='#' id='uncheckall'>Uncheck all</a></li> </ul></div></th><th>FM</th><th>KD_JENIS_TRANSAKSI</th><th>FG_PENGGANTI</th><th>NOMOR_FAKTUR</th><th>MASA_PAJAK</th><th>TAHUN_PAJAK</th><th>TANGGAL_FAKTUR</th><th>NPWP</th><th>NAMA</th><th>ALAMAT_LENGKAP</th><th>JUMLAH_DPP</th><th>JUMLAH_PPN</th><th>JUMLAH_PPNBM</th><th>IS_CREDITABLE</th></tr></thead><tbody>";
-                var csvval = e.target.result.split("\n");                
+                var csvval = e.target.result.split("\n");
                 for (var i = 1; i < csvval.length; i++) {
                     if (csvval[i] == "") {
                         continue;
-                    }                    
+                    }
                     arrayFaktur.push({"isChecked":true,"isi":[]});
                     var fakturValue = csvval[i].split('","');
                     var row = "<tr id='"+fakturValue[1]+fakturValue[2]+fakturValue[3]+"'>";
                     row = row + "<td>" + "<input type='checkbox' class='checkbox' checked='true' data-index='"+(i-1)+"'/>" + "</td>";
-                    for (var j = 0; j < fakturValue.length; j++) {                        
+                    for (var j = 0; j < fakturValue.length; j++) {
                         row = row + "<td>" + fakturValue[j].replace('"', '') + "</td>";
                         arrayFaktur[i-1].isi.push(fakturValue[j].replace('"', ''));
                         if (j == 11) {
@@ -160,12 +160,12 @@ $(document).ready(function(){
         return false;
     })
 
-    $("#submit").on('click', function(e){                
-        if (arrayFaktur.length > 0) {                   
+    $("#submit").on('click', function(e){
+        if (arrayFaktur.length > 0) {
             $("#loadingstatus").text("Menunggu...");
             $("#closeloading").attr('disabled',true);
-            $("#loadingmessage").html("Faktur yang terproses: <span id='prosesfaktur'></span>");            
-            $("#myModal").modal({'backdrop': 'static'});                         
+            $("#loadingmessage").html("Faktur yang terproses: <span id='prosesfaktur'></span>");
+            $("#myModal").modal({'backdrop': 'static'});
         }
         else{
             alert("input faktur csv pls");
@@ -175,7 +175,7 @@ $(document).ready(function(){
         var token = "234kfq1n1i401v0tjgm";
         if (action == 'debit') {
             debitFaktur(token, url)();
-        }        
+        }
         else{
             kreditFaktur(token, url)();
         }
@@ -184,29 +184,29 @@ $(document).ready(function(){
     // for debit
     function debitFaktur(token, url){
         var tidakDiproses = 0;
-        // var jumlahTerproses = 0; 
+        // var jumlahTerproses = 0;
         jumlahGagal = 0;
         jumlahSukses = 0;
         var current = 0;
-        var chunkSize = 1;  
-        $("#prosesfaktur").text(current);     
-        return function(){                       
+        var chunkSize = 1;
+        $("#prosesfaktur").text(current);
+        return function(){
             for (var i = 0; i < chunkSize; i++) {
                 // console.log(arrayFaktur[current+i]);
                 // console.log("sebelum"+current);
                 if (arrayFaktur[current+i].isChecked) {
                     var dataFaktur = JSON.stringify({'faktur': arrayFaktur[current+i].isi, 'user': '1'});
-                    var idFaktur = arrayFaktur[current+i].isi[1]+arrayFaktur[current+i].isi[2]+arrayFaktur[current+i].isi[3];                    
+                    var idFaktur = arrayFaktur[current+i].isi[1]+arrayFaktur[current+i].isi[2]+arrayFaktur[current+i].isi[3];
                     $.ajax({
                         type: 'POST',
                         data: dataFaktur,
                         ContentType: 'application/json',
-                        dataType: 'json',                     
-                        url: url+token,                        
-                        success: function(result, status){                            
+                        dataType: 'json',
+                        url: url+token,
+                        success: function(result, status){
                             $("#prosesfaktur").text((current - tidakDiproses));
                             // console.log('faktur:'+idFaktur);
-                            if (result.code == 200) {                                
+                            if (result.code == 200) {
                                ++jumlahSukses;
                                 $("#"+idFaktur).addClass('success');
                             }
@@ -221,14 +221,14 @@ $(document).ready(function(){
                             ++jumlahGagal;
                             $("#"+idFaktur).addClass('failed');
                         }
-                    });   
+                    });
                 }
                 else{
                     tidakDiproses++;
                 }
             }
-            
-            current  = current + chunkSize;            
+
+            current  = current + chunkSize;
             if (current < arrayFaktur.length) {
                 setTimeout(arguments.callee, 10);
             }
@@ -236,7 +236,7 @@ $(document).ready(function(){
                 setTimeout(function(){
                     $("#loadingstatus").text("Selesai!");
                     $("#closeloading").attr('disabled',false);
-                }, 3000);                
+                }, 3000);
             }
         }
     }
@@ -244,35 +244,35 @@ $(document).ready(function(){
     // for kredit
     function kreditFaktur(token, url){
         var tidakDiproses = 0;
-        // var jumlahTerproses = 0; 
+        // var jumlahTerproses = 0;
         jumlahGagal = 0;
         jumlahSukses = 0;
         var current = 0;
-        var chunkSize = 1;  
-        $("#prosesfaktur").text(current);     
-        return function(){                       
+        var chunkSize = 1;
+        $("#prosesfaktur").text(current);
+        return function(){
             for (var i = 0; i < chunkSize; i++) {
                 // console.log(arrayFaktur[current+i]);
                 // console.log("sebelum"+current);
                 if (arrayFaktur[current+i].isChecked) {
                     var dataFaktur = JSON.stringify({
-                        'faktur': arrayFaktur[current+i].isi, 
+                        'faktur': arrayFaktur[current+i].isi,
                         'user': '1',
                         'masa_kredit': $('#masa-bulan').val(),
                         'tahun_kredit': $('#masa-tahun').val()
                     });
                     // console.log(dataFaktur);
-                    var idFaktur = arrayFaktur[current+i].isi[1]+arrayFaktur[current+i].isi[2]+arrayFaktur[current+i].isi[3];                    
+                    var idFaktur = arrayFaktur[current+i].isi[1]+arrayFaktur[current+i].isi[2]+arrayFaktur[current+i].isi[3];
                     $.ajax({
                         type: 'POST',
                         data: dataFaktur,
                         ContentType: 'application/json',
-                        dataType: 'json',                     
-                        url: url+token,                        
-                        success: function(result, status){                            
+                        dataType: 'json',
+                        url: url+token,
+                        success: function(result, status){
                             $("#prosesfaktur").text((current - tidakDiproses));
                             // console.log('faktur:'+idFaktur);
-                            if (result.code == 200) {                                
+                            if (result.code == 200) {
                                ++jumlahSukses;
                                 $("#"+idFaktur).addClass('success');
                             }
@@ -287,13 +287,13 @@ $(document).ready(function(){
                             ++jumlahGagal;
                             $("#"+idFaktur).addClass('failed');
                         }
-                    });   
+                    });
                 }
                 else{
                     tidakDiproses++;
                 }
             }
-            
+
             current  = current + chunkSize;
             // console.log("sesudah"+current);
             if (current < arrayFaktur.length) {
@@ -303,7 +303,7 @@ $(document).ready(function(){
                 setTimeout(function(){
                     $("#loadingstatus").text("Selesai!");
                     $("#closeloading").attr('disabled',false);
-                }, 2000);                
+                }, 2000);
             }
         }
     }
@@ -311,8 +311,8 @@ $(document).ready(function(){
         $("#gagalDebit").text(jumlahGagal);
         $("#suksesDebit").text(jumlahSukses);
         $(".loadingscreen").css('opacity',0);
-        $(".loadingscreen").css('visibility','hidden');    
-        $("body").css('overflow-y','visible');    
-    });    
+        $(".loadingscreen").css('visibility','hidden');
+        $("body").css('overflow-y','visible');
+    });
 })
 </script>

@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class ModelFaktur extends CI_Model{
+
+	// revisi start here
+	public function checkKolomNomorFaktur($noFaktur, $tabel){
+		$this->db->select("NOMOR_FAKTUR");
+
+	}
+	// revisi end here
 	public function debitFaktur($faktur){		
 		if ($this->db->insert('faktur_debit', $faktur)) {
 			return true;

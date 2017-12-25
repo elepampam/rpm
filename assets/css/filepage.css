@@ -5,6 +5,12 @@ img.logo-itdc {
     margin: 10px auto;
 }
 
+.btn-pajak-khusus{
+    position: absolute;
+    top: 5px;
+    right: 0;
+}
+
 .box-input {
     text-align: center;
 }
