@@ -20,10 +20,30 @@ class Faktur extends CI_Controller {
 			// 	$data['sukses'] = $this->session->flashdata('sukses');
 			// }
 
-			$this->load->view('user-input',$data);			
+			$this->load->view('user-input',$data);
 		}
 		else
 			redirect('home');
+	}
+
+	public function debitKhusus(){
+		if (!isset($_POST['faktur'])) {
+			exit('No Direct Script Allowed!');
+		}
+		else{
+			$faktur = array(
+				'NO_FAKTUR' => $_POST['faktur']['no-faktur'],
+				'MASA_PAJAK' => $_POST['faktur']['masa-pajak'],
+				'TAHUN_PAJAK' => $_POST['faktur']['tahun-pajak'],
+				'TANGGAL_FAKTUR' => $_POST['faktur']['tanggal-faktur'],
+				'NPWP' => $_POST['faktur']['npwp'],
+				'NAMA' => $_POST['faktur']['nama'],
+				'ALAMAT_LENGKAP' => $_POST['faktur']['alamat-faktur'],
+				'JUMLAH_DPP' => $_POST['faktur']['dpp-faktur'],
+				'JUMLAH_PPN' => $_POST['faktur']['ppn-faktur'],
+				'JUMLAH_PPNBM' => $_POST['faktur']['ppnbm-faktur']
+			);
+		}
 	}
 
 	public function kredit(){
@@ -38,19 +58,10 @@ class Faktur extends CI_Controller {
 			// 	$data['sukses'] = $this->session->flashdata('sukses');
 			// }
 
-			$this->load->view('user-input',$data);			
+			$this->load->view('user-input',$data);
 		}
 		else
 			redirect('home');
-	}
-
-	private function csvtoarray($filecsv){
-		$filecsv = fopen($filecsv, 'r');
-		 while (!feof($filecsv) ) {
-	        $array[] = fgetcsv($filecsv, 1024);
-	    }
-	    fclose($filecsv);
-		return $array;
 	}
 
 	public function debitfaktur(){
@@ -59,7 +70,7 @@ class Faktur extends CI_Controller {
 			exit("no direct script allowed");
 		}
 
-		$input = file_get_contents("php://input");			
+		$input = file_get_contents("php://input");
 		$input = json_decode($input,true);
 		// $input  = array(
 		// 	'faktur' => array("FM", "01", "0", "0011740189804", "1", "2017", "29/01/2017", "211433768906000", "CV AKAMEDIA", "JL. MUDING INDAH VII NO.1 RT.000 RW.000, KEROBOKAN , BADUNG", "900000", "90000", "0", "1"),
@@ -70,7 +81,7 @@ class Faktur extends CI_Controller {
 		$tanggal[0] = $tanggal[2];
 		$tanggal[2] = $temp;
 		$inputFaktur = array(
-			'NO_FAKTUR' => $input['faktur'][1].$input['faktur'][2].$input['faktur'][3],			
+			'NO_FAKTUR' => $input['faktur'][1].$input['faktur'][2].$input['faktur'][3],
 			'FM' => $input['faktur'][0],
 			'KD_JENIS' => $input['faktur'][1],
 			'FG_PENGGANTI' => $input['faktur'][2],
@@ -95,20 +106,20 @@ class Faktur extends CI_Controller {
 		if ($queryStatus) {
 			$response = array(
 				'code' => 200,
-				'status' => 'sukses debit' 
+				'status' => 'sukses debit'
 			);
 		}
 		else{
 			$response = array(
 				'code' => 422,
-				'status' => 'gagal debit' 
-			);	
+				'status' => 'gagal debit'
+			);
 		}
 		// print_r($input['faktur']);
 		// echo $queryStatus;
 		echo json_encode($response);
 
-		// $data = json_decode($data);				
+		// $data = json_decode($data);
 		// $balikan = json_encode($data);
 		// echo $balikan;
 	}
@@ -119,7 +130,7 @@ class Faktur extends CI_Controller {
 			exit("no direct script allowed");
 		}
 
-		$input = file_get_contents("php://input");			
+		$input = file_get_contents("php://input");
 		$input = json_decode($input,true);
 		// $input  = array(
 		// 	'faktur' => array("FM", "01", "0", "0011740189804", "1", "2017", "29/01/2017", "211433768906000", "CV AKAMEDIA", "JL. MUDING INDAH VII NO.1 RT.000 RW.000, KEROBOKAN , BADUNG", "900000", "90000", "0", "1"),
@@ -130,7 +141,7 @@ class Faktur extends CI_Controller {
 		$tanggal[0] = $tanggal[2];
 		$tanggal[2] = $temp;
 		$inputFaktur = array(
-			'NO_FAKTUR' => $input['faktur'][1].$input['faktur'][2].$input['faktur'][3],			
+			'NO_FAKTUR' => $input['faktur'][1].$input['faktur'][2].$input['faktur'][3],
 			'FM' => $input['faktur'][0],
 			'KD_JENIS' => $input['faktur'][1],
 			'FG_PENGGANTI' => $input['faktur'][2],
@@ -157,20 +168,20 @@ class Faktur extends CI_Controller {
 		if ($queryStatus) {
 			$response = array(
 				'code' => 200,
-				'status' => 'sukses kredit' 
+				'status' => 'sukses kredit'
 			);
 		}
 		else{
 			$response = array(
 				'code' => 422,
-				'status' => 'gagal kredit' 
-			);	
+				'status' => 'gagal kredit'
+			);
 		}
 		// print_r($input['faktur']);
 		// echo $queryStatus;
 		echo json_encode($response);
 
-		// $data = json_decode($data);				
+		// $data = json_decode($data);
 		// $balikan = json_encode($data);
 		// echo $balikan;
 	}
@@ -182,12 +193,12 @@ class Faktur extends CI_Controller {
 			$ppnDebit = $this->faktur_model->getTotalPpnDebit();
 			$matchFaktur = $this->faktur_model->matchingFaktur();
 
-			if (!is_null($ppnDebit)) { 
+			if (!is_null($ppnDebit)) {
 				$data['ppnDebit'] = $ppnDebit->result_array()[0]['total_ppn'];
 			}
 			else
-				$data['ppnDebit'] = 0;			
-			
+				$data['ppnDebit'] = 0;
+
 			if (!is_null($ppnKredit)) {
 				$data['ppnKredit'] = $ppnKredit->result_array()[0]['total_ppn'];
 			}
@@ -202,7 +213,7 @@ class Faktur extends CI_Controller {
 			$data['ppnDebit'] = 'Rp '.number_format($data['ppnDebit'], 2, ',', '.');
 			$data['ppnKredit'] = 'Rp '.number_format($data['ppnKredit'], 2, ',', '.');
 			// fixed
-			
+
 			if (!empty($matchFaktur)) {
 				$noFakturs = $matchFaktur->result();
 				foreach ($noFakturs as $noFaktur) {
@@ -272,7 +283,7 @@ class Faktur extends CI_Controller {
 	public function rekonsiliasi(){
 		if ($this->session->has_userdata('user_masuk')) {
 			$data['user'] = $this->session->userdata('user_masuk');
-			$data['posisi'] = 'Rekonsiliasi';		
+			$data['posisi'] = 'Rekonsiliasi';
 			$this->load->model('modelfaktur');
 			$data['notRekon'] = $this->modelfaktur->notRekon();//1
 
@@ -288,7 +299,7 @@ class Faktur extends CI_Controller {
 
 			$data['selisihPpn'] = abs($varDebit[0]['ppn_kotor'] - $varKredit[0]['ppn_kotor']);
 			$data['kontrolRekon'] = abs($data['sumBebanDebit'] - $data['sumBebanKredit']);
-			$this->load->view('rekonsiliasi',$data);			
+			$this->load->view('rekonsiliasi',$data);
 		}
 		else
 			redirect('home');
@@ -314,7 +325,7 @@ class Faktur extends CI_Controller {
 			14 => "IS_CREDITABLE",
 			15 => "USER_INPUT",
 			16 => "DATE_INPUT",
-			17 => "IS_MATCHED"			
+			17 => "IS_MATCHED"
 		);
 		$tabel = $this->input->get('tabel');
 		$limit = $this->input->post('length');
@@ -328,7 +339,7 @@ class Faktur extends CI_Controller {
 		$totalFiltered = $totalData;
 		if (empty($this->input->post('search')['value'])) {
 				$posts = $this->modelfaktur->allBeban($tabel,$limit,$start,$order,$dir);
-		}	
+		}
 		else{
 			$search = $this->input->post('search')['value'];
 			$posts = $this->modelfaktur->bebanSearch($tabel,$limit,$start,$order,$dir, $search);
@@ -351,18 +362,18 @@ class Faktur extends CI_Controller {
 				$nestedData["ALAMAT_LENGKAP"] = $post->ALAMAT_LENGKAP;
 				$nestedData["JUMLAH_DPP"] = $this->toRP($post->JUMLAH_DPP);
 				$nestedData["JUMLAH_PPN"] = $this->toRP($post->JUMLAH_PPN);
-				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);				
+				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);
 				$nestedData["USER_INPUT"] = $post->USER_INPUT;
-				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);								
+				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);
 				array_push($data, $nestedData);
 			}
 		}
 
 		$jsonData = array(
-			   "draw"            => intval($this->input->post('draw')),  
-                "recordsTotal"    => intval($totalData),  
-                "recordsFiltered" => intval($totalFiltered), 
-                "data"            => $data   
+			   "draw"            => intval($this->input->post('draw')),
+                "recordsTotal"    => intval($totalData),
+                "recordsFiltered" => intval($totalFiltered),
+                "data"            => $data
 		);
 		echo json_encode($jsonData);
 	}
@@ -387,7 +398,7 @@ class Faktur extends CI_Controller {
 			14 => "IS_CREDITABLE",
 			15 => "USER_INPUT",
 			16 => "DATE_INPUT",
-			17 => "IS_MATCHED"			
+			17 => "IS_MATCHED"
 		);
 		$tabel = $this->input->get('tabel');
 		$limit = $this->input->post('length');
@@ -401,7 +412,7 @@ class Faktur extends CI_Controller {
 		$totalFiltered = $totalData;
 		if (empty($this->input->post('search')['value'])) {
 				$posts = $this->modelfaktur->allDatabase($tabel,$limit,$start,$order,$dir);
-		}	
+		}
 		else{
 			$search = $this->input->post('search')['value'];
 			$posts = $this->modelfaktur->databaseSearch($tabel,$limit,$start,$order,$dir, $search);
@@ -424,26 +435,26 @@ class Faktur extends CI_Controller {
 				$nestedData["ALAMAT_LENGKAP"] = $post->ALAMAT_LENGKAP;
 				$nestedData["JUMLAH_DPP"] = $this->toRP($post->JUMLAH_DPP);
 				$nestedData["JUMLAH_PPN"] = $this->toRP($post->JUMLAH_PPN);
-				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);				
+				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);
 				$nestedData["USER_INPUT"] = $post->USER_INPUT;
-				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);								
+				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);
 				$nestedData["ACTION"] = "<button data-id='".$nestedData["NO_FAKTUR"]."' data-tabel='".$tabel."' class='btn btn-danger delete-faktur'>Delete</button>";
 				array_push($data, $nestedData);
 			}
 		}
 
 		$jsonData = array(
-			   "draw"            => intval($this->input->post('draw')),  
-                "recordsTotal"    => intval($totalData),  
-                "recordsFiltered" => intval($totalFiltered), 
-                "data"            => $data   
+			   "draw"            => intval($this->input->post('draw')),
+                "recordsTotal"    => intval($totalData),
+                "recordsFiltered" => intval($totalFiltered),
+                "data"            => $data
 		);
 		echo json_encode($jsonData);
 	}
 
 
 	private function fixingDate($date){
-		$date = explode('-', $date);		
+		$date = explode('-', $date);
 		$temp = $date[0];
 		$date[0] = $date[2];
 		$date[2] = $temp;
@@ -454,7 +465,7 @@ class Faktur extends CI_Controller {
 		$angka = str_split($angka);
 		$fixedRp = ",00";
 		$index = 0;
-		for ($i=count($angka)-1; $i >= 0 ; $i--) { 
+		for ($i=count($angka)-1; $i >= 0 ; $i--) {
 			if ($index % 3 == 0 && $index != 0) {
 				$fixedRp = $angka[$i].".".$fixedRp;
 			}
@@ -472,14 +483,14 @@ class Faktur extends CI_Controller {
 			$response = array(
 				'code' => 201,
 				'response' => 'seluruh faktur telah di rekon sebelumnya'
-			);			
+			);
 			echo json_encode($response);
 		}
 		else{
 			$updateFaktur = array();
 			foreach ($matchedFaktur as $faktur) {
 				array_push($updateFaktur, $faktur->NO_FAKTUR);
-			}				
+			}
 			$this->modelfaktur->rekonsiliasi($updateFaktur);
 			$response = array(
 				'code' => 202,
@@ -493,7 +504,7 @@ class Faktur extends CI_Controller {
 		$this->load->model('modelfaktur');
 		$data['notRekon'] = $this->modelfaktur->notRekon();//1
 
-		$varDebit = $this->modelfaktur->dataPpnDebit();//2		
+		$varDebit = $this->modelfaktur->dataPpnDebit();//2
 		$data['ppnDebit'] = $this->toRP($varDebit[0]['ppn_kotor']);
 		$data['totalBebanDebit'] = $varDebit[0]['total_faktur_debit_beban'];
 		$data['sumBebanDebit'] = $this->toRP($varDebit[0]['sum_faktur_debit_beban']);
@@ -513,8 +524,8 @@ class Faktur extends CI_Controller {
 			$data = array();
 			$tabel = $this->input->get('tabel');
 			$data['user'] = $this->session->userdata('user_masuk');
-			$data['posisi'] = 'print pdf';		
-			$this->load->model('modelfaktur');		
+			$data['posisi'] = 'print pdf';
+			$this->load->model('modelfaktur');
 
 			$varDebit = $this->modelfaktur->dataPpnDebit();//1
 			$data['ppnDebit'] = $this->toRP($varDebit[0]['ppn_kotor']);
@@ -542,7 +553,7 @@ class Faktur extends CI_Controller {
 			}
 			$data['fakturs'] = $fakturs;
 			$data['kontrolRekon'] = $this->toRP(abs($varKredit[0]['sum_faktur_kredit_beban'] - $varDebit[0]['sum_faktur_debit_beban']));
-			// print_r($data);					
+			// print_r($data);
 
 			// $this->load->view('cetak',$data);
 			$this->load->library('mpdf/mpdf');
@@ -590,7 +601,7 @@ class Faktur extends CI_Controller {
 			14 => "IS_CREDITABLE",
 			15 => "USER_INPUT",
 			16 => "DATE_INPUT",
-			17 => "IS_MATCHED"		
+			17 => "IS_MATCHED"
 		);
 
 		$months = array(
@@ -599,7 +610,7 @@ class Faktur extends CI_Controller {
 		$tabel = $this->input->get('tabel');
 		$limit = $this->input->post('length');
 		$start = $this->input->post('start');
-		$order = $this->input->post('order')[0]['column'];		
+		$order = $this->input->post('order')[0]['column'];
 		$dir = $this->input->post('order')[0]['dir'];
 
 		$totalData = $this->modelfaktur->allFakturCount($tabel);
@@ -607,7 +618,7 @@ class Faktur extends CI_Controller {
 		$totalFiltered = $totalData;
 		if (empty($this->input->post('search')['value'])) {
 				$posts = $this->modelfaktur->allFaktur($tabel,$limit,$start,$order,$dir);
-		}	
+		}
 		else{
 			$search = $this->input->post('search')['value'];
 			$posts = $this->modelfaktur->fakturSearch($tabel,$limit,$start,$order,$dir, $search);
@@ -630,45 +641,45 @@ class Faktur extends CI_Controller {
 				$nestedData["ALAMAT_LENGKAP"] = $post->ALAMAT_LENGKAP;
 				$nestedData["JUMLAH_DPP"] = $this->toRP($post->JUMLAH_DPP);
 				$nestedData["JUMLAH_PPN"] = $this->toRP($post->JUMLAH_PPN);
-				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);				
+				$nestedData["JUMLAH_PPNBM"] = $this->toRP($post->JUMLAH_PPNBM);
 				$nestedData["USER_INPUT"] = $post->USER_INPUT;
-				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);				
+				$nestedData["DATE_INPUT"] = $this->fixingDate($post->DATE_INPUT);
 				$nestedData['STATUS'] = $post->STATUS;
 				if ($tabel == 'faktur_kredit') {
 					$nestedData['MASA_KREDIT'] = $months[$post->MASA_KREDIT];
 					$nestedData['TAHUN_KREDIT'] = $post->TAHUN_KREDIT;
-				}				
+				}
 				array_push($data, $nestedData);
 			}
 		}
 
 		$jsonData = array(
-			   "draw"            => intval($this->input->post('draw')),  
-                "recordsTotal"    => intval($totalData),  
-                "recordsFiltered" => intval($totalFiltered), 
-                "data"            => $data   
+			   "draw"            => intval($this->input->post('draw')),
+                "recordsTotal"    => intval($totalData),
+                "recordsFiltered" => intval($totalFiltered),
+                "data"            => $data
 		);
 		echo json_encode($jsonData);
 	}
 
 	public function delete(){
-		$input = file_get_contents("php://input");			
+		$input = file_get_contents("php://input");
 		$input = json_decode($input,true);
 		$this->load->model('modelfaktur');
-		$success = $this->modelfaktur->deleteFaktur($input);			
+		$success = $this->modelfaktur->deleteFaktur($input);
 		if ($success) {
 			if (isset($input['NO_FAKTUR'])) {
 				$response = array(
 					'code' => 202,
-					'message' => 'faktur berhasil dihapus' 
-				);	
-			}	
+					'message' => 'faktur berhasil dihapus'
+				);
+			}
 			else{
 				$response = array(
 					'code' => 202,
-					'message' => 'database '.$input["TABEL"].' berhasil dikosongkan' 
+					'message' => 'database '.$input["TABEL"].' berhasil dikosongkan'
 				);
-			}		
+			}
 		}
 		else{
 			if (isset($input["NO_FAKTUR"])) {
@@ -682,7 +693,7 @@ class Faktur extends CI_Controller {
 					'code' => 403,
 					'message' => 'database '.$input["TABEL"].' gagal dihapus, silahkan coba lagi'
 				);
-			}			
+			}
 		}
 		echo json_encode($response);
 	}

@@ -9,7 +9,7 @@
         <i class="fa fa-question" aria-hidden="true" data-toggle="tooltip" title="Help"></i>
     </a>
     <div class="circle-icon" id="user">
-    <?php 
+    <?php
     if (file_exists($_SERVER['DOCUMENT_ROOT']."/banditrpm/assets/user_images/".$user['avatar'].".jpg")) {
         ?>
         <img src="<?php echo base_url(); ?>assets/user_images/<?php echo $user['avatar']; ?>.jpg" id="user-img">
@@ -17,8 +17,16 @@
     } else {
      ?>
      <img src="<?php echo base_url(); ?>assets/images/default-pp.jpg" id="user-img">
-     <?php 
-     }?>        
+     <?php
+     }?>
         <div class="overlay"></div>
     </div>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#user').click(function() {
+	    $('.user-action').toggleClass('toggle-action');
+	});
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>

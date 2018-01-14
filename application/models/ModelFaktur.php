@@ -6,17 +6,16 @@ class ModelFaktur extends CI_Model{
 	// revisi start here
 	public function checkKolomNomorFaktur($noFaktur, $tabel){
 		$this->db->select("NOMOR_FAKTUR");
-
 	}
 	// revisi end here
-	public function debitFaktur($faktur){		
+	public function debitFaktur($faktur){
 		if ($this->db->insert('faktur_debit', $faktur)) {
 			return true;
 		}
 		return false;
 	}
 
-	public function kreditFaktur($faktur){		
+	public function kreditFaktur($faktur){
 		if ($this->db->insert('faktur_kredit', $faktur)) {
 			return true;
 		}
@@ -40,12 +39,12 @@ class ModelFaktur extends CI_Model{
 
 	public function dataPpnDebit(){
 		$result = $this->db->query("
-			SELECT `ppn_kotor`, `total_faktur_debit_beban`, `sum_faktur_debit_beban` FROM 
-			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `ppn_kotor`, '1' AS 'key' FROM `faktur_debit`) AS `tabel_ppn` 
-			JOIN 
-			(SELECT COUNT(`JUMLAH_PPN`) AS `total_faktur_debit_beban`, '1' AS 'key' FROM `faktur_debit` where `faktur_debit`.`IS_MATCHED` = 0) AS `tabel_count_beban` 
-			JOIN 
-			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `sum_faktur_debit_beban`, '1' AS 'key' FROM `faktur_debit` where `faktur_debit`.`IS_MATCHED` = 0) AS `tabel_sum_beban` 
+			SELECT `ppn_kotor`, `total_faktur_debit_beban`, `sum_faktur_debit_beban` FROM
+			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `ppn_kotor`, '1' AS 'key' FROM `faktur_debit`) AS `tabel_ppn`
+			JOIN
+			(SELECT COUNT(`JUMLAH_PPN`) AS `total_faktur_debit_beban`, '1' AS 'key' FROM `faktur_debit` where `faktur_debit`.`IS_MATCHED` = 0) AS `tabel_count_beban`
+			JOIN
+			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `sum_faktur_debit_beban`, '1' AS 'key' FROM `faktur_debit` where `faktur_debit`.`IS_MATCHED` = 0) AS `tabel_sum_beban`
 			WHERE `tabel_ppn`.`key` = `tabel_count_beban`.`key` AND `tabel_ppn`.`key` = `tabel_sum_beban`.`key`
 		")->result_array();
 
@@ -54,12 +53,12 @@ class ModelFaktur extends CI_Model{
 
 	public function dataPpnKredit(){
 		$result = $this->db->query("
-			SELECT `ppn_kotor`, `total_faktur_kredit_beban`, `sum_faktur_kredit_beban` FROM 
-			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `ppn_kotor`, '1' AS 'key' FROM `faktur_kredit`) AS `tabel_ppn` 
-			JOIN 
-			(SELECT COUNT(`JUMLAH_PPN`) AS `total_faktur_kredit_beban`, '1' AS 'key' FROM `faktur_kredit` where `faktur_kredit`.`IS_MATCHED` = 0) AS `tabel_count_beban` 
-			JOIN 
-			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `sum_faktur_kredit_beban`, '1' AS 'key' FROM `faktur_kredit` where `faktur_kredit`.`IS_MATCHED` = 0) AS `tabel_sum_beban` 
+			SELECT `ppn_kotor`, `total_faktur_kredit_beban`, `sum_faktur_kredit_beban` FROM
+			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `ppn_kotor`, '1' AS 'key' FROM `faktur_kredit`) AS `tabel_ppn`
+			JOIN
+			(SELECT COUNT(`JUMLAH_PPN`) AS `total_faktur_kredit_beban`, '1' AS 'key' FROM `faktur_kredit` where `faktur_kredit`.`IS_MATCHED` = 0) AS `tabel_count_beban`
+			JOIN
+			(SELECT IFNULL(SUM(`JUMLAH_PPN`),0) AS `sum_faktur_kredit_beban`, '1' AS 'key' FROM `faktur_kredit` where `faktur_kredit`.`IS_MATCHED` = 0) AS `tabel_sum_beban`
 			WHERE `tabel_ppn`.`key` = `tabel_count_beban`.`key` AND `tabel_ppn`.`key` = `tabel_sum_beban`.`key`
 		")->result_array();
 
@@ -141,7 +140,7 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("JUMLAH_PPN", $search);
 		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
-		$this->db->or_like("DATE_INPUT", $search);		
+		$this->db->or_like("DATE_INPUT", $search);
 		$this->db->where('IS_MATCHED',0);
 		$this->db->limit($limit, $start);
 		$this->db->order_by($col, $dir);
@@ -171,9 +170,9 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("ALAMAT_LENGKAP", $search);
 		$this->db->or_like("JUMLAH_DPP", $search);
 		$this->db->or_like("JUMLAH_PPN", $search);
-		$this->db->or_like("JUMLAH_PPNBM", $search);		
+		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
-		$this->db->or_like("DATE_INPUT", $search);		
+		$this->db->or_like("DATE_INPUT", $search);
 		$this->db->where('IS_MATCHED',0);
 		$result = $this->db->get();
 
@@ -183,7 +182,7 @@ class ModelFaktur extends CI_Model{
 	// server side for search
 	public function allFakturCount($tabel){
 		$this->db->select('*');
-		$this->db->from($tabel);		
+		$this->db->from($tabel);
 		$result = $this->db->get()->num_rows();
 		return $result;
 	}
@@ -194,7 +193,7 @@ class ModelFaktur extends CI_Model{
 		}
 		elseif ($tabel == 'faktur_kredit') {
 			$this->db->select('NO_FAKTUR,FM,KD_JENIS,FG_PENGGANTI,NOMOR_FAKTUR,MASA_PAJAK,TAHUN_PAJAK,TANGGAL_FAKTUR,NPWP,NAMA,ALAMAT_LENGKAP,JUMLAH_DPP,JUMLAH_PPN,JUMLAH_PPNBM,USER_INPUT,DATE_INPUT,STATUS,MASA_KREDIT,TAHUN_KREDIT');
-		}		
+		}
 		$this->db->from($tabel);
 		$this->db->join('status_rekon',"$tabel.IS_MATCHED = status_rekon.IS_MATCHED");
 		$this->db->limit($limit, $start);
@@ -215,7 +214,7 @@ class ModelFaktur extends CI_Model{
 		}
 		elseif ($tabel == 'faktur_kredit') {
 			$this->db->select('NO_FAKTUR,FM,KD_JENIS,FG_PENGGANTI,NOMOR_FAKTUR,MASA_PAJAK,TAHUN_PAJAK,TANGGAL_FAKTUR,NPWP,NAMA,ALAMAT_LENGKAP,JUMLAH_DPP,JUMLAH_PPN,JUMLAH_PPNBM,USER_INPUT,DATE_INPUT,STATUS,MASA_KREDIT,TAHUN_KREDIT');
-		}	
+		}
 		$this->db->from($tabel);
 		$this->db->join('status_rekon',"$tabel.IS_MATCHED = status_rekon.IS_MATCHED");
 		$this->db->like("NO_FAKTUR", $search);
@@ -231,9 +230,9 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("ALAMAT_LENGKAP", $search);
 		$this->db->or_like("JUMLAH_DPP", $search);
 		$this->db->or_like("JUMLAH_PPN", $search);
-		$this->db->or_like("JUMLAH_PPNBM", $search);		
+		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
-		$this->db->or_like("DATE_INPUT", $search);			
+		$this->db->or_like("DATE_INPUT", $search);
 		$this->db->or_like("STATUS",$search);
 		$this->db->limit($limit, $start);
 		$this->db->order_by($col, $dir);
@@ -265,7 +264,7 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("ALAMAT_LENGKAP", $search);
 		$this->db->or_like("JUMLAH_DPP", $search);
 		$this->db->or_like("JUMLAH_PPN", $search);
-		$this->db->or_like("JUMLAH_PPNBM", $search);		
+		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
 		$this->db->or_like("DATE_INPUT", $search);
 		$this->db->or_like("STATUS",$search);
@@ -308,12 +307,12 @@ class ModelFaktur extends CI_Model{
 	public function deleteFaktur($input){
 		if (isset($input['NO_FAKTUR'])) {
 			// check if faktur already rekon or not
-			$checkIsRekon = $this->db->query("SELECT IS_MATCHED FROM ".$input['TABEL']." WHERE NO_FAKTUR = ".$input['NO_FAKTUR'])->result();		
+			$checkIsRekon = $this->db->query("SELECT IS_MATCHED FROM ".$input['TABEL']." WHERE NO_FAKTUR = ".$input['NO_FAKTUR'])->result();
 
 			if ($checkIsRekon[0]->IS_MATCHED == 1) {
 				if ($input['TABEL'] == 'faktur_debit') {
 					$oppositeTable = 'faktur_kredit';
-				}	
+				}
 				else
 					$oppositeTable = 'faktur_debit';
 
@@ -322,13 +321,13 @@ class ModelFaktur extends CI_Model{
 			}
 
 			$this->db->where('NO_FAKTUR', $input['NO_FAKTUR']);
-			$result = $this->db->delete($input['TABEL']);		
+			$result = $this->db->delete($input['TABEL']);
 			return $result;
 		}
 		else{
 			if ($input['TABEL'] == 'faktur_debit') {
 				$oppositeTable = 'faktur_kredit';
-			}	
+			}
 			else
 				$oppositeTable = 'faktur_debit';
 
@@ -340,7 +339,7 @@ class ModelFaktur extends CI_Model{
 				}
 				$this->db->where_in('NO_FAKTUR',$tempFaktur);
 				$this->db->delete($oppositeTable);
-			}			
+			}
 			$result = $this->db->empty_table($input['TABEL']);
 			return $result;
 		}
@@ -348,14 +347,14 @@ class ModelFaktur extends CI_Model{
 
 	public function allDatabaseCount($tabel){
 		$this->db->select('*');
-		$this->db->from($tabel);		
+		$this->db->from($tabel);
 		$result = $this->db->get()->num_rows();
 		return $result;
 	}
 
 	public function allDatabase($tabel, $limit, $start, $col, $dir){
 		$this->db->select('NO_FAKTUR,FM,KD_JENIS,FG_PENGGANTI,NOMOR_FAKTUR,MASA_PAJAK,TAHUN_PAJAK,TANGGAL_FAKTUR,NPWP,NAMA,ALAMAT_LENGKAP,JUMLAH_DPP,JUMLAH_PPN,JUMLAH_PPNBM,USER_INPUT,DATE_INPUT');
-		$this->db->from($tabel);		
+		$this->db->from($tabel);
 		$this->db->limit($limit, $start);
 		$this->db->order_by($col, $dir);
 		$result = $this->db->get();
@@ -386,7 +385,7 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("JUMLAH_PPN", $search);
 		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
-		$this->db->or_like("DATE_INPUT", $search);				
+		$this->db->or_like("DATE_INPUT", $search);
 		$this->db->limit($limit, $start);
 		$this->db->order_by($col, $dir);
 		$result = $this->db->get();
@@ -415,12 +414,12 @@ class ModelFaktur extends CI_Model{
 		$this->db->or_like("ALAMAT_LENGKAP", $search);
 		$this->db->or_like("JUMLAH_DPP", $search);
 		$this->db->or_like("JUMLAH_PPN", $search);
-		$this->db->or_like("JUMLAH_PPNBM", $search);		
+		$this->db->or_like("JUMLAH_PPNBM", $search);
 		$this->db->or_like("USER_INPUT", $search);
-		$this->db->or_like("DATE_INPUT", $search);				
+		$this->db->or_like("DATE_INPUT", $search);
 		$result = $this->db->get();
 
 		return $result->num_rows();
 	}
-	
+
 }
